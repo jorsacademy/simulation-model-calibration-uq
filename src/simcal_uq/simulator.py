@@ -5,7 +5,6 @@ from dataclasses import dataclass
 
 import numpy as np
 
-
 METRIC_NAMES = (
     "throughput_rate",
     "mean_cycle_time",
