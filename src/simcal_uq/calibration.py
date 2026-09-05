@@ -8,7 +8,6 @@ from scipy.optimize import differential_evolution, least_squares
 
 from .simulator import METRIC_NAMES, QueueParameters, simulate_replications
 
-
 DEFAULT_BOUNDS = np.array(
     [
         [0.45, 1.35],
