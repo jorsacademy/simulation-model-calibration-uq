@@ -1,7 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import Iterable
 
 import numpy as np
 from scipy.optimize import differential_evolution, least_squares
@@ -106,6 +106,7 @@ def calibrate(
         return (pred - target) / scale
 
     if global_search:
+
         def scalar_objective(x: np.ndarray) -> float:
             residual = residual_fn(x)
             return float(np.dot(residual, residual))
