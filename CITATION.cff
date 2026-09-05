@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+title: Simulation Model Calibration and Uncertainty Quantification
+authors:
+  - name: Jors Academy
+message: "If you use this research implementation, please cite the repository."
+type: software
+version: 0.1.0
+date-released: 2026-09-05
+license: MIT
+repository-code: "https://github.com/jorsacademy/simulation-model-calibration-uq"
