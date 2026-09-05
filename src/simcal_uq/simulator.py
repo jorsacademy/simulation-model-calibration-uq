@@ -30,7 +30,7 @@ class QueueParameters:
         )
 
     @classmethod
-    def from_array(cls, values: Iterable[float]) -> "QueueParameters":
+    def from_array(cls, values: Iterable[float]) -> QueueParameters:
         vals = np.asarray(list(values), dtype=float)
         if vals.shape != (4,):
             raise ValueError("expected four parameters")
