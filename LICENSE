@@ -1,21 +1,78 @@
-MIT License
+# JORS Academy Non-Commercial Source License 1.0
 
-Copyright (c) 2026 Jors Academy
+Copyright (c) 2026 JORS Academy. All rights reserved except for the limited permissions expressly granted below.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+## 1. Limited permission
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+Subject to all terms of this license, you may download, inspect, run, reproduce, and modify this software and its accompanying materials solely for personal, academic, educational, or non-commercial research purposes.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+You may redistribute unmodified or modified copies only when all of the following conditions are met:
+
+1. the use and redistribution are entirely non-commercial;
+2. this license and all copyright, attribution, and restriction notices remain intact;
+3. recipients receive no broader rights than those granted by this license; and
+4. the software is not offered as part of a paid product, paid service, paid training package, consulting engagement, hosted service, or revenue-generating activity.
+
+## 2. Commercial use is prohibited
+
+Without a separate prior written commercial license from the copyright holder, you may not use, copy, modify, execute, deploy, distribute, sublicense, sell, lease, monetize, or otherwise exploit this software or any substantial portion or derivative work for any commercial purpose.
+
+Prohibited commercial purposes include, without limitation:
+
+- use by or for a for-profit entity in its internal business operations, decision systems, analytics, optimization, planning, engineering, research, development, or production workflows;
+- paid consulting, implementation, integration, support, training, or professional services;
+- incorporation into, bundling with, or use to develop a commercial product, application, library, model, platform, or service;
+- software-as-a-service, platform-as-a-service, API, hosted, managed, or subscription offerings;
+- resale, sublicensing, relicensing, paid redistribution, or commercial hosting;
+- use that directly or indirectly supports advertising revenue, transaction revenue, subscription revenue, cost reduction for a commercial enterprise, or other for-profit economic advantage; and
+- use of the software or derivative works to provide outputs, recommendations, or capabilities to paying customers or clients.
+
+Commercial use is prohibited whether the software is used directly or indirectly and whether or not the software itself is separately sold.
+
+## 3. Derivative works
+
+Any modification, adaptation, translation, port, extension, or other derivative work based on this software remains subject to this license unless the copyright holder grants different rights in a separate written agreement. You may not remove, weaken, bypass, or replace the non-commercial restrictions in a redistributed derivative work.
+
+## 4. No sublicensing or additional permissions
+
+You may not sublicense this software, grant downstream recipients commercial rights, or apply terms that purport to permit conduct prohibited by this license.
+
+## 5. No trademark rights
+
+This license grants no right to use the names, logos, trademarks, service marks, or branding of JORS Academy except as reasonably necessary for factual attribution.
+
+## 6. Ownership
+
+The software is licensed, not sold. The copyright holder retains all right, title, and interest in the software and all rights not expressly granted by this license.
+
+## 7. Termination
+
+Your rights under this license terminate automatically and immediately if you breach any term. Upon termination you must stop all use and distribution and delete all copies under your control, except copies that applicable law requires you to retain.
+
+## 8. Disclaimer of warranty
+
+THE SOFTWARE IS PROVIDED "AS IS" AND "AS AVAILABLE", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, NON-INFRINGEMENT, ACCURACY, RELIABILITY, OR FITNESS FOR OPERATIONAL DECISION-MAKING.
+
+## 9. Limitation of liability
+
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE COPYRIGHT HOLDER SHALL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE DAMAGES, OR FOR LOSS OF PROFITS, REVENUE, DATA, BUSINESS, GOODWILL, OR OPPORTUNITY, ARISING FROM OR RELATED TO THE SOFTWARE OR THIS LICENSE.
+
+## 10. No professional or production-use warranty
+
+The software is provided for personal, educational, academic, and non-commercial research purposes. It does not constitute legal, financial, engineering, operational, safety, accounting, or other professional advice and is not warranted for production decision-making.
+
+## 11. Separate commercial licensing
+
+Commercial rights are available only through a separate written agreement signed or otherwise expressly authorized by the copyright holder. No silence, repository access, contribution, fork, pull request, or other conduct creates an implied commercial license.
+
+## 12. Severability
+
+If any provision of this license is held unenforceable, the remaining provisions remain in effect to the maximum extent permitted by law.
+
+## 13. Acceptance
+
+By exercising any permission granted under this license, you acknowledge that you have read and agree to its terms. If you do not agree, you receive no permission to use, copy, modify, or distribute the software beyond rights that cannot lawfully be restricted.
+
+---
+
+This is a custom source-available non-commercial license, not an OSI-approved open-source license.
