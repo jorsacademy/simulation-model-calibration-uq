@@ -1,10 +1,13 @@
 name: One-shot repository consolidation
+
 on:
   push:
     paths:
       - ".github/workflows/consolidate-related-repos.yml"
+
 permissions:
   contents: write
+
 jobs:
   consolidate:
     if: github.actor != 'github-actions[bot]'
@@ -24,7 +27,10 @@ jobs:
           )
           mkdir -p projects
           for repo in "${sources[@]}"; do
-            if [ -d "projects/$repo" ]; then continue; fi
+            if [ -d "projects/$repo" ]; then
+              echo "Skipping existing projects/$repo"
+              continue
+            fi
             tmp="$(mktemp -d)"
             git clone --depth 1 "https://github.com/jorsacademy/$repo.git" "$tmp/repo"
             sha="$(git -C "$tmp/repo" rev-parse HEAD)"
@@ -32,14 +38,14 @@ jobs:
             mkdir -p "projects/$repo"
             cp -a "$tmp/repo/." "projects/$repo/"
             cat > "projects/$repo/SOURCE_REPOSITORY.md" <<EOF
-# Source repository
-
-Copied from https://github.com/jorsacademy/$repo
-
-Source commit: `$sha`
-
-The original repository remains unchanged.
-EOF
+          # Source repository
+          
+          Copied from https://github.com/jorsacademy/$repo
+          
+          Source commit: `$sha`
+          
+          The original repository remains unchanged.
+          EOF
             rm -rf "$tmp"
           done
           rm -f .github/workflows/consolidate-related-repos.yml
