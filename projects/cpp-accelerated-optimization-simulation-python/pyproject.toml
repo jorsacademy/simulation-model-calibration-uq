@@ -1,0 +1,17 @@
+[build-system]
+requires = [
+  "scikit-build-core>=0.11",
+  "pybind11>=3.0,<4",
+]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "cpp-accelerated-industrial-simulation"
+version = "0.1.0"
+description = "C++17/pybind11 accelerated Monte Carlo simulation and maintenance policy optimization"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24"]
+
+[tool.scikit-build]
+minimum-version = "0.11"
+wheel.packages = ["src/cpp_accelerated_sim"]

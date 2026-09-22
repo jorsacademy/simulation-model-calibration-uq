@@ -1,0 +1,44 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Monte Carlo self-test
+        run: python parallel_monte_carlo_stochastic_optimization.py --self-test
+
+      - name: Run regression suite
+        run: python -m unittest discover -s tests -v
+
+      - name: Run stochastic optimization smoke test
+        run: |
+          python parallel_monte_carlo_stochastic_optimization.py \
+            --selection-scenarios 3000 \
+            --validation-scenarios 8000 \
+            --seed 42
+
+      - name: Benchmark scalar, NumPy and multiprocessing kernels
+        run: |
+          python parallel_monte_carlo_stochastic_optimization.py \
+            --benchmark \
+            --benchmark-scenarios 10000 \
+            --benchmark-repeats 1 \
+            --seed 123

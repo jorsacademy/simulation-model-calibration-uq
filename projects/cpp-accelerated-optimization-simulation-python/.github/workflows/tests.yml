@@ -1,0 +1,53 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-test-benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Build C++17 pybind11 extension
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -v .
+
+      - name: Run standalone C++ core oracle
+        run: |
+          g++ -O3 -std=c++17 cpp/core_smoke.cpp -o core_smoke
+          ./core_smoke
+
+      - name: Verify compiled extension import
+        run: python -c "import cpp_accelerated_sim as m; assert m.cpp_available()"
+
+      - name: Run regression tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Run compiled optimization smoke
+        run: |
+          python run_experiment.py \
+            --selection-scenarios 300 \
+            --validation-scenarios 700 \
+            --days 120 \
+            --assets 12 \
+            --seed 42
+
+      - name: Benchmark Python versus C++ kernel
+        run: |
+          python run_experiment.py \
+            --benchmark \
+            --benchmark-scenarios 600 \
+            --days 160 \
+            --assets 14 \
+            --repeats 1 \
+            --seed 123
