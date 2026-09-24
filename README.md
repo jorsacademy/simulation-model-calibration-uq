@@ -1,4 +1,18 @@
-# Simulation Model Calibration & Uncertainty Quantification
+# Simulation Optimization and Uncertainty Quantification
+
+<!-- portfolio-umbrella:start -->
+## Portfolio role
+
+This repository is the primary umbrella repository for this Jors Academy research area. Related projects have been consolidated under `projects/` so the methods, implementations, experiments, and case studies can be maintained and explored from one place.
+
+### Included projects
+
+- [`cpp-accelerated-optimization-simulation-python`](projects/cpp-accelerated-optimization-simulation-python/)
+- [`manufacturing-discrete-event-simulation-optimization-python`](projects/manufacturing-discrete-event-simulation-optimization-python/)
+- [`parallel-monte-carlo-stochastic-optimization-python`](projects/parallel-monte-carlo-stochastic-optimization-python/)
+
+Each consolidated project keeps its own files and a `SOURCE_REPOSITORY.md` provenance record. The snapshot preserves the source repository's default-branch files at consolidation time; repository-level history and metadata remain separate from the snapshot.
+<!-- portfolio-umbrella:end -->
 
 A reproducible research implementation for calibrating a stochastic discrete-event simulation, quantifying parameter uncertainty, propagating that uncertainty to operational KPIs, and measuring global sensitivity with Sobol indices.
 
