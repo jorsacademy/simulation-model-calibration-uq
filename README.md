@@ -10,18 +10,20 @@ This repository is the primary umbrella repository for this Jors Academy researc
 - [`cpp-accelerated-optimization-simulation-python`](projects/cpp-accelerated-optimization-simulation-python/)
 - [`manufacturing-discrete-event-simulation-optimization-python`](projects/manufacturing-discrete-event-simulation-optimization-python/)
 - [`parallel-monte-carlo-stochastic-optimization-python`](projects/parallel-monte-carlo-stochastic-optimization-python/)
+- [`stochastic-kriging-noisy-simulation-optimization`](projects/stochastic-kriging-noisy-simulation-optimization/) — native metamodeling and ranking-selection benchmark
 
-Each consolidated project keeps its own files and a `SOURCE_REPOSITORY.md` provenance record. The snapshot preserves the source repository's default-branch files at consolidation time; repository-level history and metadata remain separate from the snapshot.
+Consolidated source projects keep their own files and a `SOURCE_REPOSITORY.md` provenance record. New native research extensions may instead share the root `simcal_uq` package and CI while keeping project-specific documentation under `projects/`.
 <!-- portfolio-umbrella:end -->
 
-A reproducible research implementation for calibrating a stochastic discrete-event simulation, quantifying parameter uncertainty, propagating that uncertainty to operational KPIs, and measuring global sensitivity with Sobol indices.
+A reproducible research implementation for stochastic simulation calibration, uncertainty quantification, sensitivity analysis, simulation metamodeling, ranking-and-selection, and noisy simulation optimization.
 
-The project deliberately separates four questions that are often conflated in simulation studies:
+The project deliberately separates five questions that are often conflated in simulation studies:
 
 1. **Calibration:** which simulator parameters best reproduce observed system summaries?
 2. **Parameter uncertainty:** how stable are those parameters to the observed replication sample?
 3. **Predictive uncertainty:** how much uncertainty remains in future KPI predictions after combining parameter uncertainty with intrinsic simulator randomness?
 4. **Sensitivity:** which uncertain inputs explain the variance of an output KPI?
+5. **Noisy optimization:** how should a fixed simulation budget be allocated when candidate objective values are only observed through stochastic replications?
 
 The implementation uses NumPy and SciPy only, so the complete study runs in GitHub Actions without commercial solvers, external services, or hidden data.
 
@@ -74,6 +76,75 @@ Official references used to ground the implementation:
 - SciPy `differential_evolution`: https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.differential_evolution.html
 - SciPy Sobol QMC: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.qmc.Sobol.html
 
+
+## Simulation metamodeling and noisy optimization
+
+The repository now includes a second research layer for **optimization under simulation noise**. It reuses the repairable production queue as a stochastic objective generator and treats service capacity and repair capacity as controllable decisions.
+
+The matched-budget benchmark compares:
+
+- **equal allocation** across all finite candidate designs;
+- **OCBA** for adaptive replication allocation in ranking-and-selection;
+- **stochastic kriging + expected improvement** for surrogate-assisted sequential search.
+
+The stochastic-kriging implementation is an ordinary Gaussian-process metamodel with a constant trend, RBF covariance, and **heteroskedastic observation noise** estimated from replicated simulation outputs. At each sampled design, the nugget is the estimated variance of the sample mean rather than one global noise constant.
+
+~~~text
+replicated simulation outputs
+        |
+        v
+mean + sample variance + variance(mean)
+        |
+        v
+heteroskedastic stochastic kriging
+        |
+        +------------------------+
+        |                        |
+        v                        v
+posterior mean             posterior uncertainty
+        |                        |
+        +-----------+------------+
+                    |
+                    v
+      expected improvement
+                    |
+                    v
+         next simulation design
+~~~
+
+OCBA addresses the complementary finite-alternative problem. Replications are shifted toward statistically competitive designs using estimated means, sample variances, and optimality gaps.
+
+All methods receive the same search-stage simulation budget. A larger Monte Carlo sample is used only **after selection** to estimate reference mean costs and simple regret:
+
+~~~text
+simple regret
+=
+reference mean cost of selected design
+-
+best reference mean cost
+~~~
+
+The evaluation-only reference budget is never available to the search policies.
+
+Run:
+
+~~~bash
+python scripts/run_noisy_optimization.py \
+  --grid-size 5 \
+  --budget 150 \
+  --reference-reps 60 \
+  --horizon 250
+~~~
+
+Output:
+
+~~~text
+artifacts/noisy_optimization.json
+~~~
+
+The experiment does not assume that a surrogate method must beat equal allocation on every seed. Negative results are valid when the candidate set is small, simulation noise is weak, or the metamodel is misspecified.
+
+
 ## Why global search precedes least squares
 
 A stochastic discrete-event simulator is not generally smooth in its parameters. Under fixed random streams, event counts and event order can change discontinuously as rates change. During development, a pure local finite-difference least-squares fit stayed too close to its initialization on the synthetic recovery benchmark.
@@ -113,6 +184,7 @@ The estimator itself is tested on the analytic additive model `f(x)=x1+2*x2`, wh
 python -m pip install -e ".[dev]"
 pytest
 python scripts/run_study.py
+python scripts/run_noisy_optimization.py
 ```
 
 A smaller deterministic end-to-end study runs on every push and pull request and uploads the resulting JSON as a GitHub Actions artifact.
@@ -126,8 +198,11 @@ The repository checks:
 - synthetic parameter recovery against a known ground truth;
 - bootstrap and uncertainty-propagation bounds/shapes;
 - Jansen Sobol estimates against a function with known analytic indices;
+- stochastic-kriging behavior on a smooth noisy response;
+- OCBA integer-budget conservation and minimum-allocation rules;
+- matched-budget noisy-optimization execution for equal allocation, OCBA, and stochastic kriging;
 - Python 3.10, 3.11, and 3.12 in GitHub Actions;
-- an end-to-end calibration, bootstrap, propagation, and sensitivity research smoke run.
+- end-to-end calibration/UQ and noisy-optimization research smoke runs.
 
 ## Limitations
 
@@ -136,11 +211,13 @@ The repository checks:
 - Bootstrap coverage in one synthetic CI seed is an integration diagnostic, not proof of nominal repeated-sampling coverage.
 - Sobol indices depend on the chosen parameter bounds/distributions.
 - Common random numbers reduce comparison noise but do not remove aleatory uncertainty.
+- The current stochastic-kriging benchmark uses independent simulation streams across alternatives and a diagonal replication-noise model; correlated-CRN kriging is not implemented.
+- The noisy-optimization study is finite-grid and single-fidelity; continuous-domain global optimization and multi-fidelity simulation remain separate extensions.
 - The project is an independent research implementation; it does not reproduce OpenTURNS, DAKOTA, UQpy, or any single published package.
 
 ## Literature context
 
-Useful methodological starting points include Kennedy & O'Hagan (2001) on computer-model calibration, Jansen (1999) on variance-based designs for model output, Saltelli et al. (2010) on variance-based sensitivity analysis, and Efron & Tibshirani (1993) on bootstrap methods.
+Useful methodological starting points include Kennedy & O'Hagan (2001) on computer-model calibration, Jansen (1999) on variance-based designs for model output, Saltelli et al. (2010) on variance-based sensitivity analysis, Efron & Tibshirani (1993) on bootstrap methods, Ankenman, Nelson & Staum (2010) on stochastic kriging, and Chen et al. on optimal computing budget allocation for simulation ranking-and-selection.
 
 See `RESEARCH_NOTES.md` for implementation boundaries and interpretation guidance.
 
