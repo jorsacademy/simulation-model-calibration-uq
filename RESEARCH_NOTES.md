@@ -71,7 +71,60 @@ Synthetic recovery is useful because the true parameter vector is known. A small
 
 Bootstrap truth coverage in one CI seed is included as an integration diagnostic, not as an estimate of repeated-sampling coverage probability. Proper coverage assessment would require many independent synthetic datasets and substantially more computation.
 
-## 10. Extensions
+
+## 10. Stochastic kriging and noisy optimization
+
+The noisy-optimization extension asks a different question from calibration: if the simulator itself is the objective oracle and every evaluation is stochastic, where should a fixed replication budget be spent?
+
+The controlled decision problem exposes two queue-system design variables:
+
+- service capacity through the service-rate parameter;
+- repair capacity through the repair-rate parameter.
+
+Each replication combines capacity cost, repair-capacity cost, mean queue length, and mean cycle time into one synthetic operating-cost response. These coefficients are benchmark choices, not industrial cost estimates.
+
+### Replicated-design noise model
+
+For each sampled design point the implementation retains the full replication vector. The metamodel is fitted to the replication mean, while the diagonal observation-noise term is
+
+`sample variance / number of replications`.
+
+The noise level can therefore differ across design points. This is the principal distinction from fitting an ordinary deterministic GP with one global nugget.
+
+### Stochastic-kriging metamodel
+
+The implementation uses ordinary kriging with:
+
+- a constant generalized-least-squares trend;
+- anisotropic RBF length scales;
+- process variance estimated by Gaussian marginal likelihood;
+- known heteroskedastic replication-noise estimates;
+- a small numerical jitter for Cholesky stability.
+
+Posterior uncertainty is uncertainty about the latent mean response, not the variance of one future raw simulation replication.
+
+### Expected improvement
+
+The sequential surrogate policy minimizes the simulated cost. At each stage it computes expected improvement relative to the best currently observed replication mean and spends the next small replication batch at the candidate with maximum acquisition value.
+
+Repeated sampling of an already-observed candidate is allowed. Under simulation noise that can be rational because additional replications reduce uncertainty in the sample mean.
+
+### OCBA
+
+The finite-alternative ranking-and-selection policy uses the classical approximate OCBA allocation ratios. For non-best alternatives the weight is proportional to sample variance divided by squared estimated optimality gap. The estimated best receives the balancing allocation implied by the competitor weights.
+
+The implementation converts continuous ratios to integer target counts with a minimum-replication floor and largest-remainder correction. It should be interpreted as a transparent sequential OCBA benchmark rather than a complete reproduction of every finite-sample OCBA variant.
+
+### Evaluation contract
+
+Equal allocation, OCBA, and stochastic-kriging expected improvement receive the same search-stage simulation budget.
+
+Reference mean costs are estimated only after every method has selected a candidate. That larger Monte Carlo budget is evaluation-only information. The primary decision metric is simple regret relative to the best reference mean.
+
+No test asserts that a sophisticated method must dominate equal allocation. The regression suite checks mathematical and computational invariants, not a preferred research conclusion.
+
+
+## 11. Extensions
 
 Natural research extensions include:
 
@@ -79,10 +132,12 @@ Natural research extensions include:
 - censored/incomplete observations;
 - non-exponential service and repair distributions;
 - likelihood-free Bayesian calibration / ABC;
-- Gaussian-process emulator-assisted calibration;
+- Gaussian-process emulator-assisted calibration with explicit model discrepancy;
 - explicit model discrepancy terms;
 - profile likelihood confidence regions;
 - Morris screening before Sobol analysis;
 - correlated uncertain inputs and Shapley effects;
-- multi-fidelity simulation calibration;
+- multi-fidelity simulation calibration and optimization;
+- correlated common-random-number stochastic kriging;
+- knowledge-gradient and constrained noisy acquisition policies;
 - sequential experimental design to reduce parameter uncertainty.
